@@ -1,0 +1,30 @@
+Password 1: t*;rslidru<>[@a
+Strength: 3/5
+
+Password 2: ){<h#@%,-c>l;mj
+Strength: 3/5
+
+Password 3: s;@$=ni[iq]tl|%
+Strength: 3/5
+
+Password 4: is_md*}o#xw@]!e
+Strength: 3/5
+
+Password 5: ]vrw|b:q}hl=*z*
+Strength: 3/5
+
+Password 6: _&l;mz-&]h#<;g=
+Strength: 3/5
+
+Password 7: jof=ra-a@^t_ryb
+Strength: 3/5
+
+Password 8: @rrd&}f}&}g_]b)
+Strength: 3/5
+
+Password 9: wglv}&$>m;j<q^<
+Strength: 3/5
+
+Password 10: x][@|l|k(zl,c-@
+Strength: 3/5
+
