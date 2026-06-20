@@ -74,11 +74,17 @@ fn client(mut stream: Arc<TcpStream>, message: Sender<Message>) -> Result<()>{
             eprintln!("Couldn't read message : {err}");
             let _ = message.send(Message::ClientDisConnected{author_add});
         })?;
-        message.send(Message::NewMessage{author_add, bytes:buffer[0..n].to_vec()}).map_err(|err| {
-            eprintln!("couldn't send message to server thread {err}")
-        })?;
+        if n > 0{
+            message.send(Message::NewMessage{author_add, bytes:buffer[0..n].to_vec()}).map_err(|err| {
+                eprintln!("couldn't send message to server thread {err}")
+            })?;
+        }else{
+            eprintln!("Reached End OF LINE");
+            let _ = message.send(Message::ClientDisConnected{author_add});
+            break;
+        }
     };
-
+    Ok(())
 }
 
 fn server(messages: Receiver<Message>)->Result<()>{
