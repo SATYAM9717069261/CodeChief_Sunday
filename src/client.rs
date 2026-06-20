@@ -7,7 +7,6 @@ use crossterm::{event::poll};
 use crossterm::event::{read,Event,KeyCode,KeyModifiers};
 use std::time::Duration;
 use std::cmp::max;
-use std::str;
 
 use std::net::TcpStream;
 
