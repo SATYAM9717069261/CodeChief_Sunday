@@ -123,10 +123,10 @@ fn server(messages: Receiver<Message>)->Result<()>{
                     let now = SystemTime::now();
                     let diff = now.duration_since(author.last_message).expect(" Dont Crash ");
 
-                    if diff >= MESSAGE_RATE && let Some(text) = str::from_utf8(&bytes).ok() {
+                    if diff >= MESSAGE_RATE && str::from_utf8(&bytes).is_ok() {
                         for (add,client) in clients.iter(){
                             if *add != author_add{
-                                let _ = write!(client.conn.as_ref(),"{text}");
+                                let _ = client.conn.as_ref().write(&bytes);
                             }
                         }
                     } else{
