@@ -32,7 +32,7 @@ fn funtionality(mut width:u16,mut height:u16){
     let mut bar = str.repeat(width as usize);
     let mut prompt = String::from("");
 
-    let mut stream = TcpStream::connect("127.0.0.1:8080").unwrap();
+    let mut stream = TcpStream::connect("127.0.0.1:6969").unwrap();
     let _ =  stream.set_nonblocking(true).unwrap();
     let mut buf = [0;64];
 

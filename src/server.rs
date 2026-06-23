@@ -48,7 +48,7 @@ enum Message{
         bytes:Vec<u8>
     },
 }
-
+#[derive(Debug)]
 struct Client{
     conn: Arc<TcpStream>,
     last_message: SystemTime,
@@ -91,6 +91,10 @@ fn server(messages: Receiver<Message>)->Result<()>{
     let mut clients: HashMap<SocketAddr,Client> = HashMap::new();
     let mut banned_mfs: HashMap<IpAddr,SystemTime> = HashMap::new();
 
+    println!("client Details : {:?}", clients);
+    println!("banned Details : {:?}", banned_mfs);
+
+
     loop{
         let msg = messages.recv().expect("Server Recived Message");
         match msg{
@@ -126,6 +130,7 @@ fn server(messages: Receiver<Message>)->Result<()>{
                 //let author_add = author.peer_addr().expect("Peer Address Pending");
 
                 if let Some(author) = clients.get_mut(&author_add){
+                    println!("New Message : {:?}",bytes);
                     let now = SystemTime::now();
                     let diff = now.duration_since(author.last_message).expect(" Dont Crash ");
 
