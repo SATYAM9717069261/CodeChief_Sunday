@@ -1,41 +1,45 @@
-extern crate proc_macro;
+extern crate commandMacro;
+
 use std::env::{args,Args};
 use std::process::ExitCode;
+use commandMacro::{command,command_list};
 
 struct Command{
     name: &'static str,
-    des: &'static str,
-    run: fn(&str,&mut Args)
+    description: &'static str,
+    run: fn(&str, Args)-> ExitCode
 }
 
-const COMMANDS:&[Command] = &[
-    Command {
-        name:"hello",
-        des :" print hello",
-        run : hello_command
-    },
-    Command {
-        name:"help",
-        des :" print help",
-        run : help_command
+fn usage(program: &str) {
+    eprintln!("Usage: {program} <command>");
+    eprintln!("Commands:");
+    for command in COMMANDS.iter() {
+        eprintln!("    {name} - {description}", name = command.name, description = command.description);
     }
-];
-
-/**
-    Source - https://stackoverflow.com/a/47515540
-    These two are equivalent
-    fn map<U>(self, f: impl FnOnce(T) -> U) -> Option<U>
-    fn map<U, F>(self, f: F) -> Option<U> where F: FnOnce(T) -> U
- */
-fn hello_command(_program:&str, _args:&mut impl Iterator<Item = String>){
-    println!("hello world {:?}",_args.next().expect("Missing 3rd Arg"));
 }
 
-fn help_command(_program:&str, _args:&mut impl Iterator<Item = String>){
-    println!("help Command {:?}",_args.next().expect("Missing 3rd Arg"));
+#[command("hello","print hello")]
+fn hello_command(_program:&str, args:Args)-> ExitCode{
+    println!("Hello, World");
+    //println!("hello world {:?}",args.next().expect("Missing 3rd Arg"));
+    ExitCode::SUCCESS
 }
 
-
+#[command("help", "Print this help messsage")]
+fn help_command(program: &str,mut args: Args) -> ExitCode {
+    if let Some(command_name) = args.next() {
+        if let Some(command) = COMMANDS.iter().find(|command| command.name == command_name) {
+            println!("{name} - {description}", name = command.name, description = command.description);
+        } else {
+            eprintln!("ERROR: command {command_name} is not found");
+            return ExitCode::FAILURE;
+        }
+    } else {
+        usage(&program);
+    }
+    ExitCode::SUCCESS
+}
+const COMMANDS:&[Command] = command_list!();
 
 fn main() -> ExitCode{
     let mut argsIter = args();
@@ -43,15 +47,11 @@ fn main() -> ExitCode{
     let cmd = argsIter.next().expect("command Name");
 
     if let Some(details) = COMMANDS.iter().find(|x| x.name == cmd){
-       /**
-        * let fun = details.run;
-        * fun(&program_name);
-        * shoter version (details.run)(&program_name)
-        **/
-        (details.run)(&program_name,&mut argsIter);
+        (details.run)(&program_name, argsIter);
     }else{
         return ExitCode::FAILURE;
     }
 
     ExitCode::SUCCESS
 }
+
